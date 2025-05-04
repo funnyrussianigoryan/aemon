@@ -32,7 +32,7 @@ jobs:
         run: uv pip install --system -e .[dev]
 
       - name: Run Ruff
-        run: make lint
+        run: uv run ruff check aemon
 
   typecheck:
     runs-on: ubuntu-latest
@@ -60,7 +60,7 @@ jobs:
         run: uv pip install --system -e .[dev]
 
       - name: Run mypy
-        run: make type
+        run: uv run mypy aemon
 
   test:
     runs-on: ubuntu-latest
@@ -89,4 +89,4 @@ jobs:
         run: uv pip install --system -e .[dev]
 
       - name: Run tests
-        run: make test
+        run: uv run pytest
