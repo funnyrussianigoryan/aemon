@@ -3,7 +3,7 @@ import logging
 from aemon.config.loader import ConfigLoader
 from aemon.core.generator import OpenAPIGenerator
 from aemon.output.html_generator import HTMLGenerator
-from aemon.parser.dto import GenerateCommandArgs, RenderHtmlCommandArgs
+from aemon.parser.dto import GenerateCommandArgs
 from aemon.parser.parser import AemonCLIParser
 
 
@@ -24,5 +24,3 @@ def main():
 
         HTMLGenerator(config.get_output_dir()).update_index(version)
 
-    elif isinstance(args, RenderHtmlCommandArgs):
-        HTMLGenerator(args.output_dir).update_index()

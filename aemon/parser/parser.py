@@ -8,30 +8,11 @@ class AemonCLIParser:
     def __init__(self):
         self.parser = argparse.ArgumentParser(
             prog="aemon",
-            description="Aemon — CLI-инструмент для генерации OpenAPI и документации",
+            description="Aemon — CLI-tool for OpenAPI spec generation",
         )
         self.subparsers = self.parser.add_subparsers(dest="command", required=True)
 
         self._register_generate_command()
-
-    def _register_generate_command(self):
-        generate = self.subparsers.add_parser("generate", help="Сгенерировать OpenAPI спецификацию")
-        generate.add_argument(
-            "--module",
-            "-m",
-            required=True,
-            help="Путь к модулю FastAPI-приложения (например, main.py)",
-        )
-        generate.add_argument(
-            "--app",
-            "-a",
-            default="app",
-            help="Имя переменной FastAPI-приложения (по умолчанию 'app')",
-        )
-
-    def _register_other_commands(self):
-        render = self.subparsers.add_parser("render-html", help="Перегенерировать index.html без нового API")
-        render.add_argument("--output-dir", efault="docs/api", help="Путь к директории с версиями OpenAPI")
 
     def parse(self) -> Union[GenerateCommandArgs, RenderHtmlCommandArgs]:
             args = self.parser.parse_args()
@@ -49,3 +30,23 @@ class AemonCLIParser:
             }
 
             return dispatch[args.command](args)
+
+    def _register_generate_command(self):
+        generate = self.subparsers.add_parser("generate", help="Generate OpenAPI spec")
+        generate.add_argument(
+            "--module",
+            "-m",
+            required=True,
+            help="FastAPI-app module path (for example, main.py)",
+        )
+        generate.add_argument(
+            "--app",
+            "-a",
+            default="app",
+            help="FastAPI variable name (default 'app')",
+        )
+
+    def _register_other_commands(self):
+        render = self.subparsers.add_parser("render-html", help="Regenerate index.html without new API")
+        render.add_argument("--output-dir", efault="docs/api", help="Path of directory with OpenAPI specs")
+
