@@ -1,0 +1,14 @@
+aemon:
+  auto_increment: true
+  description: Generated API documentation
+  include_schemas: true
+  output_dir: docs/api
+  swagger_ui_config:
+    deepLinking: true
+    displayRequestDuration: true
+    docExpansion: none
+    filter: true
+    showCommonExtensions: true
+    showExtensions: true
+  title: API Documentation
+  version_prefix: v

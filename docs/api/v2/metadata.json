@@ -1,0 +1,13 @@
+{
+  "generated_at": "2025-07-25T17:03:13.235198",
+  "generator": "aemon",
+  "module_path": "example_app.py",
+  "app_name": "app",
+  "fastapi_version": "unknown",
+  "routes_count": 19,
+  "config": {
+    "output_dir": "docs/api",
+    "title": "API Documentation",
+    "description": "Generated API documentation"
+  }
+}
