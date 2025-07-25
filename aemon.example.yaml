@@ -1,0 +1,53 @@
+aemon:
+  # Output directory for generated documentation
+  output_dir: "docs/api"
+  
+  # Documentation metadata
+  title: "My API Documentation"
+  description: "Comprehensive API documentation for my FastAPI application"
+  
+  # Version configuration
+  version_prefix: "v"
+  auto_increment: true
+  
+  # Generation options
+  include_schemas: true
+  
+  # Swagger UI configuration
+  swagger_ui_config:
+    deepLinking: true
+    displayRequestDuration: true
+    docExpansion: "none"  # "list", "full", "none"
+    filter: true
+    showExtensions: true
+    showCommonExtensions: true
+    tryItOutEnabled: true
+    requestSnippetsEnabled: true
+    supportedSubmitMethods: 
+      - "get"
+      - "post"
+      - "put"
+      - "delete"
+      - "patch"
+      - "head"
+      - "options"
+  
+  # Optional: Contact information
+  contact:
+    name: "API Support"
+    url: "https://example.com/contact"
+    email: "api-support@example.com"
+  
+  # Optional: License information
+  license:
+    name: "MIT"
+    url: "https://opensource.org/licenses/MIT"
+  
+  # Optional: Server information
+  servers:
+    - url: "https://api.example.com/v1"
+      description: "Production server"
+    - url: "https://staging-api.example.com/v1"
+      description: "Staging server"
+    - url: "http://localhost:8000"
+      description: "Development server"
