@@ -29,7 +29,7 @@ class AemonCLIParser:
                 ),
             }
 
-            return dispatch[args.command](args)
+            return dispatch[args.command](args)  # type: ignore[return-value]
 
     def _register_generate_command(self):
         generate = self.subparsers.add_parser("generate", help="Generate OpenAPI spec")
