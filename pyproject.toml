@@ -4,10 +4,14 @@ version = "0.1.0"
 description = "A CLI tool for generating open API spec"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "fastapi>=0.115.12",
+    "PyYAML>=6.0",
+    "types-pyyaml>=6.0.12.20250516",
+]
 
 [project.scripts]
-aemon = "aemon.cli:main"
+aemon = "aemon.cli.main:main"
 
 [build-system]
 requires = ["setuptools"]
@@ -20,12 +24,20 @@ dev = [
     "ruff>=0.11.8",
 ]
 
+[tool.setuptools]
+packages = ["aemon"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"aemon.assets.swagger" = ["*.css", "*.js"]
+
 [tool.ruff]
-line-length = 88
+line-length = 110
 target-version = "py312"
 lint.select = ["E", "F", "I"]
 
 [tool.mypy]
 python_version = "3.12"
-strict = true
 ignore_missing_imports = true
+show_error_codes = true
+warn_unused_ignores = true
