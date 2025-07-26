@@ -1,6 +1,7 @@
 import argparse
 from typing import Union
 
+from aemon.core.dispatcher import CommandDispatcher
 from aemon.parser.dto import GenerateCommandArgs, RenderHtmlCommandArgs
 
 
@@ -11,25 +12,33 @@ class AemonCLIParser:
             description="Aemon — CLI-tool for OpenAPI spec generation",
         )
         self.subparsers = self.parser.add_subparsers(dest="command", required=True)
+        self.dispatcher = CommandDispatcher()
 
         self._register_generate_command()
+        self._register_other_commands()
 
     def parse(self) -> Union[GenerateCommandArgs, RenderHtmlCommandArgs]:
-            args = self.parser.parse_args()
-
-            dispatch = {
-                "generate": lambda a: GenerateCommandArgs(
-                    command="generate",
-                    module=a.module,
-                    app=a.app
-                ),
-                "render-html": lambda a: RenderHtmlCommandArgs(
-                    command="render-html",
-                    output_dir=a.output_dir
-                ),
-            }
-
-            return dispatch[args.command](args)  # type: ignore[return-value]
+        args = self.parser.parse_args()
+        
+        # Create appropriate DTO based on command
+        if args.command == "generate":
+            return GenerateCommandArgs(
+                command="generate",
+                module=args.module,
+                app=args.app
+            )
+        elif args.command == "render-html":
+            return RenderHtmlCommandArgs(
+                command="render-html",
+                output_dir=args.output_dir
+            )
+        else:
+            raise ValueError(f"Unknown command: {args.command}")
+    
+    def parse_and_dispatch(self) -> any:
+        """Parse arguments and directly dispatch to appropriate command."""
+        command_args = self.parse()
+        return self.dispatcher.dispatch(command_args)
 
     def _register_generate_command(self):
         generate = self.subparsers.add_parser("generate", help="Generate OpenAPI spec")
@@ -48,5 +57,5 @@ class AemonCLIParser:
 
     def _register_other_commands(self):
         render = self.subparsers.add_parser("render-html", help="Regenerate index.html without new API")
-        render.add_argument("--output-dir", efault="docs/api", help="Path of directory with OpenAPI specs")
+        render.add_argument("--output-dir", default="docs/api", help="Path of directory with OpenAPI specs")
 
