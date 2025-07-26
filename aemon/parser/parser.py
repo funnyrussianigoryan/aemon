@@ -1,7 +1,6 @@
 import argparse
-from typing import Union
+from typing import Union, Dict, Callable
 
-from aemon.core.dispatcher import CommandDispatcher
 from aemon.parser.dto import GenerateCommandArgs, RenderHtmlCommandArgs
 
 
@@ -12,7 +11,12 @@ class AemonCLIParser:
             description="Aemon — CLI-tool for OpenAPI spec generation",
         )
         self.subparsers = self.parser.add_subparsers(dest="command", required=True)
-        self.dispatcher = CommandDispatcher()
+        
+        # DTO dispatch mapping
+        self._dto_dispatch: Dict[str, Callable] = {
+            "generate": self._create_generate_dto,
+            "render-html": self._create_render_html_dto,
+        }
 
         self._register_generate_command()
         self._register_other_commands()
@@ -20,25 +24,25 @@ class AemonCLIParser:
     def parse(self) -> Union[GenerateCommandArgs, RenderHtmlCommandArgs]:
         args = self.parser.parse_args()
         
-        # Create appropriate DTO based on command
-        if args.command == "generate":
-            return GenerateCommandArgs(
-                command="generate",
-                module=args.module,
-                app=args.app
-            )
-        elif args.command == "render-html":
-            return RenderHtmlCommandArgs(
-                command="render-html",
-                output_dir=args.output_dir
-            )
-        else:
+        if args.command not in self._dto_dispatch:
             raise ValueError(f"Unknown command: {args.command}")
+        
+        return self._dto_dispatch[args.command](args)
     
-    def parse_and_dispatch(self) -> any:
-        """Parse arguments and directly dispatch to appropriate command."""
-        command_args = self.parse()
-        return self.dispatcher.dispatch(command_args)
+    def _create_generate_dto(self, args) -> GenerateCommandArgs:
+        """Create GenerateCommandArgs DTO from parsed arguments."""
+        return GenerateCommandArgs(
+            command="generate",
+            module=args.module,
+            app=args.app
+        )
+    
+    def _create_render_html_dto(self, args) -> RenderHtmlCommandArgs:
+        """Create RenderHtmlCommandArgs DTO from parsed arguments."""
+        return RenderHtmlCommandArgs(
+            command="render-html",
+            output_dir=args.output_dir
+        )
 
     def _register_generate_command(self):
         generate = self.subparsers.add_parser("generate", help="Generate OpenAPI spec")
